@@ -1,0 +1,156 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "default": {},
+  "type": "object",
+  "properties": {
+    "世界": {
+      "default": {},
+      "type": "object",
+      "properties": {
+        "日期": {
+          "default": "2007/05/06",
+          "type": "string"
+        },
+        "时段": {
+          "default": "清晨",
+          "type": "string",
+          "enum": [
+            "清晨",
+            "上午",
+            "中午",
+            "下午",
+            "傍晚",
+            "夜里",
+            "深夜"
+          ]
+        },
+        "当前地点": {
+          "default": "吴兴街69号",
+          "type": "string",
+          "enum": [
+            "吴兴街69号",
+            "小吃街",
+            "比比火工作室",
+            "台北街头",
+            "上海"
+          ]
+        },
+        "阶段": {
+          "default": "落脚",
+          "type": "string",
+          "enum": [
+            "落脚",
+            "扎根",
+            "承诺"
+          ]
+        },
+        "天气": {
+          "default": "梅雨",
+          "type": "string"
+        }
+      }
+    },
+    "心蕾": {
+      "default": {},
+      "type": "object",
+      "properties": {
+        "好感度": {
+          "default": 45,
+          "type": "number"
+        },
+        "信任度": {
+          "default": 30,
+          "type": "number"
+        },
+        "心情": {
+          "default": "绷着，客气，正在心里给这个家立规矩",
+          "type": "string"
+        }
+      }
+    },
+    "秦朗": {
+      "default": {},
+      "type": "object",
+      "properties": {
+        "存款": {
+          "default": 3800,
+          "type": "number"
+        },
+        "摊子": {
+          "default": "歇业",
+          "type": "string",
+          "enum": [
+            "正常出摊",
+            "歇业",
+            "被人顶替",
+            "暂交他人"
+          ]
+        },
+        "插画": {
+          "default": "画自己的",
+          "type": "string",
+          "enum": [
+            "停笔",
+            "画自己的",
+            "接商稿",
+            "谈出版"
+          ]
+        },
+        "球鞋": {
+          "default": "没人注意",
+          "type": "string",
+          "enum": [
+            "没人注意",
+            "被看上",
+            "洽谈中",
+            "没有下文",
+            "量产"
+          ]
+        }
+      }
+    },
+    "阿嬷": {
+      "default": {},
+      "type": "object",
+      "properties": {
+        "认可度": {
+          "default": 35,
+          "type": "number"
+        }
+      }
+    },
+    "街坊": {
+      "default": {},
+      "type": "object",
+      "properties": {
+        "认可度": {
+          "default": 40,
+          "type": "number"
+        }
+      }
+    },
+    "秦海": {
+      "default": {},
+      "type": "object",
+      "properties": {
+        "相认": {
+          "default": "未相认",
+          "type": "string",
+          "enum": [
+            "未相认",
+            "知道他在台北",
+            "见过面",
+            "说开了"
+          ]
+        }
+      }
+    },
+    "近期事务": {
+      "default": [],
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

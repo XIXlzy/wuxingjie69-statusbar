@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>吴兴街69号 · 状态栏预览</title>
+<script src="/node_modules/vue/dist/vue.global.prod.js"></script><script src="/node_modules/jquery/dist/jquery.min.js"></script>
+<style>body{margin:0;background:#e2dace;font:13px/1.5 system-ui;color:#493f34}.preview-toolbar{max-width:780px;margin:22px auto 8px;padding:0 16px;display:flex;flex-wrap:wrap;align-items:center;gap:8px}.preview-toolbar a,.preview-toolbar button{color:inherit;background:#f5f0e6;border:1px solid #bfb19f;border-radius:3px;padding:5px 9px;font:inherit;text-decoration:none;cursor:pointer}.preview-toolbar small{margin-left:auto}iframe{display:block;width:100%;border:0;height:800px}.preview-frame{max-width:790px;margin:0 auto}</style></head>
+<body><div class="preview-toolbar"><span>仅本地测试</span><a href="?mode=normal">正常</a><a href="?mode=missing">缺失</a><a href="?mode=malformed">错误类型</a><a href="?mode=empty">空事务</a><a href="?mode=delayed">延迟初始化</a><button id="advance">测试更新至88</button><small id="result">读取中</small></div><div class="preview-frame"><iframe id="card" title="模拟酒馆消息楼层"></iframe></div>
+<script>
+(async()=>{
+ const initial=await (await fetch('./fixture.json')).json();
+ const mode=new URLSearchParams(location.search).get('mode')||'normal';
+ let data=structuredClone(initial); let listener; let reads=0; let writes=0; let correctMessage=true;
+ if(mode==='missing') data={};
+ if(mode==='malformed') data={世界:{日期:null,时段:5,当前地点:[],天气:{},阶段:'未定义'},心蕾:{好感度:'88',信任度:null,心情:44},秦朗:{存款:'3800',摊子:false,插画:[],球鞋:{}},阿嬷:{认可度:101},街坊:{认可度:-5},秦海:{相认:null},近期事务:'错误类型'};
+ if(mode==='empty') data.近期事务=[];
+ const frame=document.getElementById('card');
+ frame.srcdoc='<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head><body><div id="loading">正在加载测试界面…</div></body></html>';
+ frame.onload=()=>{
+  const w=frame.contentWindow;
+  const vue=w.document.createElement('script'); vue.src='/node_modules/vue/dist/vue.global.prod.js'; w.document.head.append(vue);
+  const jq=w.document.createElement('script'); jq.src='/node_modules/jquery/dist/jquery.min.js';
+  jq.onload=()=>{
+   w.getCurrentMessageId=()=>42;
+   w.waitGlobalInitialized=()=>new Promise(resolve=>setTimeout(resolve,mode==='delayed'?1200:0));
+   w.Mvu={events:{VARIABLE_UPDATE_ENDED:'mvu-updated'}};
+   w.eventOn=(_name,fn)=>{listener=fn; return {stop(){listener=null;}}};
+   const forbidden=()=>{writes++;throw new Error('Unexpected variable write');};
+   for(const key of ['replaceVariables','updateVariablesWith','insertOrAssignVariables'])w[key]=forbidden;
+   const started=Date.now();
+   w.getVariables=option=>{reads++;correctMessage=correctMessage&&option.type==='message'&&option.message_id===42;return mode==='delayed'&&Date.now()-started<2000?{}:{stat_data:data};};
+   w.$('body').load('/dist/wuxingjie69/statusbar/index.html');
+   const observer=new ResizeObserver(()=>{frame.style.height=(w.document.body.getBoundingClientRect().height+12)+'px';});observer.observe(w.document.body);
+  };
+  vue.onload=()=>w.document.head.append(jq);
+ };
+ document.getElementById('advance').onclick=()=>{data=structuredClone(initial);data.心蕾.好感度=88;data.近期事务=[];listener?.();};
+ setInterval(()=>{document.getElementById('result').textContent=`读取${reads}次 · 写入${writes}次 · 楼层${correctMessage?'42正确':'错误'}`;},300);
+})();
+</script></body></html>
